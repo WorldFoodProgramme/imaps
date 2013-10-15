@@ -1,0 +1,6 @@
+*.pyc
+env
+*.svn
+dumps
+local_settings.py
+

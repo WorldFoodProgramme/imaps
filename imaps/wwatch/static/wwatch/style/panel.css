@@ -1,0 +1,98 @@
+.panel {
+z-index: 1000;
+position: absolute;
+top: 30px;
+right: 0;
+display: none;
+background: #FFFFFF;
+border:1px solid #1298e9;
+-moz-border-radius-topleft: 10px;
+-webkit-border-top-left-radius: 10px;
+-moz-border-radius-bottomleft: 10px;
+-webkit-border-bottom-left-radius: 10px;
+width: 300px;
+height: 200px;
+/*Activate Scrolling*/
+overflow: auto;
+text-align:justify;
+text-justify:auto;
+padding: 20px 20px 20px 20px;
+filter: alpha(opacity=85);
+opacity: .95;
+}
+
+
+
+.panel p{
+z-index: 1000;
+margin: 0 0 0 0;
+padding: 0px;
+color: #000;
+font-size: 10px;
+font-family: ‘Verdana’, Helvetica, sans-serif;
+font-weight: 500;
+
+}
+
+p.horiz{
+	color:#fff;
+	writing-mode:tb-rl;
+	-webkit-transform:rotate(90deg);
+	-moz-transform:rotate(90deg);
+	-o-transform: rotate(90deg);
+	letter-spacing:0px;
+	width:20px;
+	height:20px;
+	font-family: ‘Trebuchet MS’, Helvetica, sans-serif;
+	font-weight:550;
+}
+
+a.trigger{
+z-index: 1000;
+width:18px;
+height:95px;
+position: absolute;
+text-decoration: none;
+top: 30px; right: 0px;
+font-size: 12px;
+font-family: verdana, helvetica, arial, sans-serif;
+color:#23A7F7;
+padding: 0px 2px 0px 5px;
+background: #23A7F7 url(images/white_arrow_left.png) 10% 50% no-repeat;
+border:1px solid #23A7F7;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-bottom-left-radius: 5px;
+}
+
+a.trigger:hover{
+z-index: 1000;
+position: absolute;
+text-decoration: none;
+width:18px;
+height:95px;
+top: 30px; right: 3;
+font-size: 12px;
+font-family: verdana, helvetica, arial, sans-serif;
+color:#FFFFFF;
+padding: 0px 2px 0px 5px;
+font-weight: 550;
+background: #1298e9 url(images/white_arrow_left.png) 10% 50% no-repeat;
+border:1px solid #23A7F7;
+-moz-border-radius-topleft: 5px;
+-webkit-border-top-left-radius: 5px;
+-moz-border-radius-bottomleft: 5px;
+-webkit-border-bottom-left-radius: 5px;
+display: block;
+}
+
+a.active.trigger {
+	width:30px;
+	height:30px;
+	font-size: 0px;
+	z-index: 1000;
+	border:0px;
+background: url(images/blue_arrow_right.png) 10% 50% no-repeat;
+}
+

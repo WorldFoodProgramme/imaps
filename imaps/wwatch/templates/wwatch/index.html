@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather Alarms</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="/static/wwatch/style/leaflet.css" />
+	<link rel="stylesheet" href="/static/wwatch/style/panel.css" />
+	<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />-->
+	<script type="text/javascript" src="/static/wwatch/js/lib/jquery-1.7.1.min.js"></script>
+
+	<style type="text/css">
+		body {
+			margin:0;padding:0;top:0;left:0;
+			}
+		#legend {z-index: 10; position: fixed; bottom: 0px; right: 5px; background-image: url(../static/wwatch/img/WeatherLegend.png); no-repeat; height:190px; width: 280px; padding: 5px; color: white;}
+		#logo {z-index: 10; position: fixed; bottom: 10px; left: 20px; background-image: url(../../static/wwatch/style/images/WFP_Logo.png); height: 68px; width: 180px; padding: 10px; color: white;}	
+		#header {z-index: 20; position: absolute; top:20px;left:0;font-family: Trebuchet MS’, Helvetica, sans-serif; font-size: 2.1em;color:white;padding: 15px;opacity: .85;text-shadow: 0 0 4px #000;font-weight:800; height:70px; width: 420px;
+background: -moz-linear-gradient(left, rgba(35,167,247,1) 0%, rgba(35,167,247,1) 61%, rgba(38,168,247,1) 62%, rgba(151,224,255,0) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(35,167,247,1)), color-stop(61%,rgba(35,167,247,1)), color-stop(62%,rgba(38,168,247,1)), color-stop(100%,rgba(151,224,255,0))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left, rgba(35,167,247,1) 0%,rgba(35,167,247,1) 61%,rgba(38,168,247,1) 62%,rgba(151,224,255,0) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left, rgba(35,167,247,1) 0%,rgba(35,167,247,1) 61%,rgba(38,168,247,1) 62%,rgba(151,224,255,0) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left, rgba(35,167,247,1) 0%,rgba(35,167,247,1) 61%,rgba(38,168,247,1) 62%,rgba(151,224,255,0) 100%); /* IE10+ */
+background: linear-gradient(to right, rgba(35,167,247,1) 0%,rgba(35,167,247,1) 61%,rgba(38,168,247,1) 62%,rgba(151,224,255,0) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#23a7f7', endColorstr='#0097e0ff',GradientType=1 ); /* IE6-9 */
+}		
+		#description {z-index: 20; position: absolute; top:60px;left:0;font-family: Trebuchet MS’, Helvetica, sans-serif; font-size: 0.6em;color:white;padding: 15px;opacity: .85;text-shadow: 0 0 4px #000;font-weight:800;width: 400px}
+		</style>
+	
+</head>
+
+<body>
+	<div id="logo"></div>
+	<div id="legend"></div>
+	<div id="map" style="height: 880px">
+		
+	</div>
+	<div class="panel">
+				<p>Published in 2013 by the World Food Programme, Via Cesare Giulio Viola, 68-70, Rome, 00148, Italy.
+Copyright © 2013 by the World Food Programme - Database rights: World Food Programme (maker)
+All rights reserved. None of this information may be reproduced, translated, or distributed, in any form or by any means without prior written permission of the World Food Programme. Requests for permission to reproduce, translate or distribute WFP material or publications for whatever reason should be addressed to the Communications Division:<a href="mailto:wfpinfo@wfp.org" title="WFPInfo">wfpinfo@wfp.org</a></p>
+				<p>The views presented here are those of the authors and do not necessarily reflect the World Food Programme's official position. The material in this publication, including in maps, does not imply the expression of any opinion whatsoever on the part of the World Food Programme concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. All reasonable precautions have been taken by the World Food Programme to verify the information and data contained in this publication. However, the published material is being distributed without warranty of any kind, either expressed or implied, including the accuracy of data. The responsibility of the interpretation and use of the material lies solely with the reader. In no event shall the World Food Programme be liable for damages arising from its interpretation, use or reliance thereof.</p>		
+			</div>
+			<a class="trigger" href="#"> <p class="horiz">DISCLAIMER</p></a>
+	<!--<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>-->
+	<script src="/static/wwatch/js/lib/leaflet.js"></script>
+	
+	<div id="header">Weekly Weather Watch</div>
+	<div id="description">This map indicates current weather concerns for the upcoming week that OMEP is monitoring.  If there is high enough confidence, other products will be issued and additional information will be provided.</div>
+	
+
+<!-- Add Legend Panel
+	<div class="panel_legend">
+		<img src="../static/img/WeatherLegend.png" style="no-repeat; height:190px; width: 280px; color: white;">
+		</img>
+	</div>
+	<a class="trigger_legend" href="#"> <p class="horiz">LEGEND</p></a> -->
+	<script>
+
+		
+		var map = L.map('map').setView([11, 25.5], 3);
+
+    L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+	minZoom: 2,	
+	maxZoom: 5,
+	attribution: ''
+    }).addTo(map);
+
+		var eventLayer = new L.GeoJSON();
+
+		var defaultStyle = {
+        		color: "#444444",
+        		weight: 1,
+        		opacity: 0.2,
+        		fillOpacity: 0.1,
+        		fillColor: "#FFFFFF"
+    		};
+		// Minor Event	
+		var MinorStyle = {
+        	color: "#48a6d1",
+        	weight: 1,
+        	opacity: 1,
+        	fillOpacity: 1,
+        	fillColor: "#B2E2E2"
+   		 };
+
+		// Moderate Event	
+		var ModerateStyle = {
+        	color: "#0170aa",
+        	weight: 1,
+        	opacity: 1,
+        	fillOpacity: 1,
+        	fillColor: "#4daffa"
+   		 };
+
+		// Major Event	
+		var MajorStyle = {
+        	color: "#014162",
+        	weight: 1,
+        	opacity: 1,
+        	fillOpacity: 1,
+        	fillColor: "#0170aa"
+   		 };
+	
+		function style(feature) {
+		// modify the style according to the type of election
+		switch(feature.properties.alert_level) {
+			case "Minor Event": return MinorStyle;
+			case "Moderate Event": return ModerateStyle;
+			case "Major Event": return MajorStyle;
+			default: return defaultStyle;
+			}
+		}
+
+		function onEachFeature(feature, layer) {
+			var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Decorative;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "</p>";
+
+			if (feature.properties.link0){
+				if (feature.properties.doc0){
+
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd></dl><dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd></dl>";
+				}else {
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd></dl>";
+				}
+
+				if (feature.properties.doc1){
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd></dl></dl><dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd></dl>";
+				}
+
+				if (feature.properties.doc2){
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url2+ "' target='_blank' ><b>" + feature.properties.doc2 + "</b></a></p></dd></dl></dl><dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd></dl>";
+				}
+				if (feature.properties.link1){
+					if (feature.properties.doc0){
+
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:12px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd></dl><dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link1+ "' target='_blank' ><b>" + feature.properties.link1 + "</b></a></p></dd></dl>";
+				} else {
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><br><b>" + feature.properties.link0 + "</b></br></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link1+ "' target='_blank' ><b>" + feature.properties.link1 + "</b></a></p></dd></dl>";
+				}
+
+				if (feature.properties.doc1){
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd></dl></dl><dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link1+ "' target='_blank' ><b>" + feature.properties.link1 + "</b></a></p></dd></dl>";
+				}
+
+				if (feature.properties.doc2){
+					var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url2+ "' target='_blank' ><b>" + feature.properties.doc2 + "</b></a></p></dd></dl></dl><dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Additional information:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link0+ "' target='_blank' ><b>" + feature.properties.link0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='" + feature.properties.link1+ "' target='_blank' ><b>" + feature.properties.link1 + "</b></a></p></dd></dl>";
+				}
+				}
+				
+			} else{
+				if (feature.properties.doc0){
+
+				var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd></dl>";
+			}
+
+			if (feature.properties.doc1){
+				var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd></dl></dl>";
+			}
+
+			if (feature.properties.doc2){
+				var popup = "<h2 style='color:red;font-family:Impact;font-size:20px;'>" + feature.properties.country+ "</h2> <p style='font-family:Calibri;font-size:10px;'> <b>Alert level:  </b>" + feature.properties.alert_level + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Hazard type:  </b>" + feature.properties.hazard_type + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Date:  </b>" + feature.properties.date + "</p><p style='font-family:Calibri;font-size:10px;'> <b>Comment:  </b>" + feature.properties.comment + "<dl><dt><p style='font-family:Calibri;font-size:10px;margin:0;'><b>Documents:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:10px;margin:0;'><a href='http://127.0.0.1:8000/" + feature.properties.url2+ "' target='_blank' ><b>" + feature.properties.doc2 + "</b></a></p></dd></dl></dl>";
+			}
+			}
+			
+			layer.bindPopup(popup);
+	}
+
+		
+		function getEvent(){
+			$.getJSON("json/Events", function(resp) {		
+			reportLayer = L.geoJson(resp,{
+					style: style,
+					onEachFeature: onEachFeature,	
+			}).addTo(map);
+		});
+		}
+		
+		//define layers order using set Timeout
+		$(document).ready(function() {
+					setTimeout('getEvent()',1000);
+		});
+						$(document).ready(function(){
+					$(".trigger").click(function(){
+						$(".panel").toggle("fast");
+						$(this).toggleClass("active");
+						return false;
+					});
+				});
+		
+
+	</script>
+</body>
+</html>
+
