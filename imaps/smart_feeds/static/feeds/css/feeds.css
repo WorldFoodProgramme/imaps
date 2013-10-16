@@ -1,0 +1,85 @@
+/* Map */
+#map {
+    height: 425px;
+    width: 1200px;
+    border: 2px solid #299bdc;;
+    margin:0 auto;
+}
+        
+/* Panels */
+#left-panel {
+	float: left;
+	width: 30%;
+	padding: 0px 0px 0px 0px;
+	background: #FFFFFF;
+}
+
+#right-panel {
+    float: right;
+    width: 70%;
+	padding: 0px 0px 0px 0px;
+	background: #FFFFFF;
+}
+
+/* Items */
+#item, #simple-item, #filtered-item, #archived-item  {
+    color: #000000;
+    border-width: 1px 1px 1px 1px;
+    border-style: solid;
+	padding: 5px 5px 5px 5px;
+    margin: 10px 10px 10px 10px;
+}
+
+#simple-item {
+
+}
+
+#filtered-item {
+	border-style: dashed;
+    background: #E8E8E8;
+}
+
+#archived-item {
+    border-style: dashed;
+	background: #A0A0A0;
+}
+
+
+#item ul, p {
+    color: #000000;
+}
+
+/* override bootstrap */
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #299bdc;
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #299bdc;
+}
+
+.navbar-brand {
+    margin-top: -8px;
+    width: 75%;
+}
+
+.navbar-brand2 {
+    margin: 0 35px;
+}
+
+.navbar
+{
+    height: 55px;
+    margin-bottom: 20px;
+}
+
+.navbar-default .navbar-nav > li > a
+{
+    color: white;
+}
+
+

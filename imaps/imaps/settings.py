@@ -1,3 +1,9 @@
+import os
+from os.path import join, abspath, dirname
+here = lambda *x: join(abspath(dirname(__file__)), *x)
+root = lambda *x: join(abspath(PROJECT_ROOT), *x)
+PROJECT_ROOT = here("..")
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -46,24 +52,10 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
-# Absolute filesystem path to the directory that will hold user-uploaded files.
-# Example: "/var/www/example.com/media/"
-MEDIA_ROOT = ''
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash.
-# Examples: "http://example.com/media/", "http://media.example.com/"
-MEDIA_URL = ''
-
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
-
-# URL prefix for static files.
-# Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/static/'
+MEDIA_ROOT = root("media")
+STATIC_ROOT = root("collected_static")
+MEDIA_URL = '/media/'
+STATIC_URL = "/static/"
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -98,6 +90,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pagination.middleware.PaginationMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+        "django.contrib.auth.context_processors.auth",
+        "django.core.context_processors.debug",
+        "django.core.context_processors.i18n",
+        "django.core.context_processors.media",
+        "django.core.context_processors.request",
+        'django.core.context_processors.static',
 )
 
 ROOT_URLCONF = 'imaps.urls'
@@ -109,6 +111,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_ROOT, "templates"),
 )
 
 INSTALLED_APPS = (
@@ -120,8 +123,13 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.gis',
+    'pagination',
+    'taggit',
     'wwatch',
     'print_tracker',
+    'smart_feeds',
+    'gdelt',
+    'critical_election',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

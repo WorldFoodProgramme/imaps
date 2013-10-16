@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load pagination_tags %}
+{% load tags %}
+
+{% block media %}
+    
+{% endblock %}
+
+{% block title %}{{ place.name }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+            <!-- item list -->
+            There are {{ place.tweet_set.all.count }} tweets for this place.
+            <div class="span12">
+                <!-- map -->
+                {% show_map place %}
+            </div>
+            
+            <div class="span12">
+            {% with place.tweet_set.all as tweets %}
+            {% autopaginate tweets 20 %}
+                {% paginate %}
+                <ul>
+                {% for t in tweets %}
+                    <li>
+                        <strong><a href="{% url "tweets-map" %}?search_id={{ t.search_set.all.0.id }}">{{ t.search_set.all.0.name }}</strong></a>,
+                        <a href="https://twitter.com/{{ t.username }}">@{{ t.username }}</a></strong>: {{ t.status }}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endwith %}
+            </div>
+    </div>
+    
+{% endblock %}

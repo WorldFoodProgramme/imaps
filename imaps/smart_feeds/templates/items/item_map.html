@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% load pagination_tags %}
+{% load tags %}
+
+{% block title %}{{ search_name }}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+          <div class="row">
+              <div class="col-md-12">
+              <!-- map -->
+              {% show_places_map places events %}
+              </div>
+          </div>
+          <div class="row">
+              <!-- Tweets -->
+              <div class="col-md-6">
+              <h2>Tweets</h2>
+                    {% autopaginate tweets 5 %}
+                    <ul>
+                    {% for t in tweets %}
+                        <li>
+                        <strong><a href="https://twitter.com/{{ t.screen_name }}">@{{ t.screen_name }}</a></strong>: {{ t.status|truncatechars:100 }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    {% paginate %}
+              </div>
+              <!-- Press -->
+              <div class="col-md-6">
+                <h2>Press News (from international, national and local news sources)</h2>
+                {% autopaginate events 5 %}
+                <ul>
+                {% for e in events %}
+                    <li>
+                    {{ e.date }}, {{ e.eventcode.description }}: <a href="{{ e.url }}">{{ e.url|truncatechars:25 }}</a>,
+                    </li>
+                {% endfor %}
+                </ul>
+                {% paginate %}
+              </div>
+          </div>
+    </div>
+
+{% endblock %}
