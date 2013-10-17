@@ -6,17 +6,17 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="/static/wwatch/style/leaflet.css" />
-	<link rel="stylesheet" href="/static/wwatch/style/panel.css" />
+	<link rel="stylesheet" href="{{STATIC_URL}}wwatch/style/leaflet.css" />
+	<link rel="stylesheet" href="{{STATIC_URL}}wwatch/style/panel.css" />
 	<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />-->
-	<script type="text/javascript" src="/static/wwatch/js/lib/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}wwatch/js/lib/jquery-1.7.1.min.js"></script>
 
 	<style type="text/css">
 		body {
 			margin:0;padding:0;top:0;left:0;
 			}
-		#legend {z-index: 10; position: fixed; bottom: 0px; right: 5px; background-image: url(../static/wwatch/img/WeatherLegend.png); no-repeat; height:190px; width: 280px; padding: 5px; color: white;}
-		#logo {z-index: 10; position: fixed; bottom: 10px; left: 20px; background-image: url(../../static/wwatch/style/images/WFP_Logo.png); height: 68px; width: 180px; padding: 10px; color: white;}	
+		#legend {z-index: 10; position: fixed; bottom: 0px; right: 5px; background-image: url({{STATIC_URL}}wwatch/img/WeatherLegend.png); no-repeat; height:190px; width: 280px; padding: 5px; color: white;}
+		#logo {z-index: 10; position: fixed; bottom: 10px; left: 20px; background-image: url({{STATIC_URL}}wwatch/style/images/WFP_Logo.png); height: 68px; width: 180px; padding: 10px; color: white;}	
 		#header {z-index: 20; position: absolute; top:20px;left:0;font-family: Trebuchet MS’, Helvetica, sans-serif; font-size: 2.1em;color:white;padding: 15px;opacity: .85;text-shadow: 0 0 4px #000;font-weight:800; height:70px; width: 420px;
 background: -moz-linear-gradient(left, rgba(35,167,247,1) 0%, rgba(35,167,247,1) 61%, rgba(38,168,247,1) 62%, rgba(151,224,255,0) 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(35,167,247,1)), color-stop(61%,rgba(35,167,247,1)), color-stop(62%,rgba(38,168,247,1)), color-stop(100%,rgba(151,224,255,0))); /* Chrome,Safari4+ */
@@ -45,7 +45,7 @@ All rights reserved. None of this information may be reproduced, translated, or 
 			</div>
 			<a class="trigger" href="#"> <p class="horiz">DISCLAIMER</p></a>
 	<!--<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>-->
-	<script src="/static/wwatch/js/lib/leaflet.js"></script>
+	<script src="{{STATIC_URL}}wwatch/js/lib/leaflet.js"></script>
 	
 	<div id="header">Weekly Weather Watch</div>
 	<div id="description">This map indicates current weather concerns for the upcoming week that OMEP is monitoring.  If there is high enough confidence, other products will be issued and additional information will be provided.</div>

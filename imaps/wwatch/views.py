@@ -1,22 +1,23 @@
 from models import *
 from django.shortcuts import render_to_response
 from django.http import HttpResponse, Http404,HttpResponseRedirect
+from django.template import RequestContext
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 import json
 
-def init(req):
+def init(request):
     """Main function to serve the application responses"""
-    if req.method == 'GET':
-	return render_to_response('wwatch/index.html')
+    if request.method == 'GET':
+	return render_to_response('wwatch/index.html', {}, RequestContext(request))
 
-def JSONSerializer(req,object):
+def JSONSerializer(request, object):
 	jsontpl = {
 	"type": "FeatureCollection",
 	"features":[],
 	}
 	"""Serializes a queryset or object into json"""
-	if req.method=='GET':
+	if request.method=='GET':
 	    if object=='Events':
 	        for item in Event.objects.all():
 		    if item.visible:
@@ -51,6 +52,6 @@ def JSONSerializer(req,object):
 	        response = HttpResponse(json.dumps(jsontpl, ensure_ascii=False))
 		return response
 
-	elif req.method=='POST':
+	elif request.method=='POST':
 	    return HttpResponse('Sorry no POST requests allowed for JSON serialization')
 
