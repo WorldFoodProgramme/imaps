@@ -4,3 +4,4 @@ env
 dumps
 local_settings.py
 *~
+media
