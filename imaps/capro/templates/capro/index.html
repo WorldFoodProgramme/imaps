@@ -1,0 +1,151 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CAPRO Map</title>
+	<meta charset="utf-8" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="{% static 'style/leaflet.css' %}" />
+	<script type="text/javascript" src="{% static 'js/lib/jquery-1.7.1.min.js' %}"></script>
+
+	<style type="text/css">
+		body {
+			margin:0;padding:0;top:0;left:0;
+			}
+				#legend {z-index: 10; position: fixed; bottom: 20px; right: 10px; background-image: url({% static 'img/Legend_Capro.png'%}); no-repeat; height:260px; width: 430px; padding: 10px; color: white;}
+				#logo {z-index: 10; position: fixed; bottom: 20px; left: 20px; background-image: url({% static 'img/WFP_Logo.png' %}); height: 68px; width: 180px; padding: 10px; color: white;}
+		#header {z-index: 20; position: absolute; top:40px;left:0;font-family: Impact; font-size: 3em;color:white;font-style: italic;padding: 15px;opacity: .85;text-shadow: 0 0 4px #000;
+			background: -moz-linear-gradient(left,  rgba(0,129,195,1) 0%, rgba(78,164,218,1) 62%, rgba(85,167,220,0.7) 68%, rgba(125,185,232,0) 100%);
+			background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(0,129,195,1)), color-stop(62%,rgba(78,164,218,1)), color-stop(68%,rgba(85,167,220,0.7)), color-stop(100%,rgba(125,185,232,0)));
+			background: -webkit-linear-gradient(left,  rgba(0,129,195,1) 0%,rgba(78,164,218,1) 62%,rgba(85,167,220,0.7) 68%,rgba(125,185,232,0) 100%);
+			background: -o-linear-gradient(left,  rgba(0,129,195,1) 0%,rgba(78,164,218,1) 62%,rgba(85,167,220,0.7) 68%,rgba(125,185,232,0) 100%);
+			background: -ms-linear-gradient(left,  rgba(0,129,195,1) 0%,rgba(78,164,218,1) 62%,rgba(85,167,220,0.7) 68%,rgba(125,185,232,0) 100%);
+			background: linear-gradient(to right,  rgba(0,129,195,1) 0%,rgba(78,164,218,1) 62%,rgba(85,167,220,0.7) 68%,rgba(125,185,232,0) 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0081c3', endColorstr='#007db9e8',GradientType=1 );
+
+}		
+		</style>
+	
+		<script type="text/javascript">
+
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-35862930-2']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+
+		</script>
+</head>
+
+<body>
+	<div id="header">CAPRO Map</div>
+	<div id="legend"></div>
+	<div id="logo"></div>
+	<div id="map" style="height: 1000px"></div>
+	<script src="{% static 'js/lib/leaflet.js' %}"></script>
+	<script>
+	
+		var map = L.map('map').setView([-5, 15], 3);
+
+		L.tileLayer("http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
+      		maxZoom: 18,
+      		subdomains: ["otile1", "otile2", "otile3", "otile4"],
+      		attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.'
+    }).addTo(map);
+
+	var ODNIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODN_Blue.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+				});
+	var ODBIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODB_Red.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+	});
+	var ODCIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODC_Yellow.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+	});
+	var ODSIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODS_Lightblue.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+	});
+	var ODPIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODP_Purple.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+	});
+	var ODJIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODJ_Orange.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+	});
+	var ODDIcon = L.icon({
+				iconUrl: "{% static 'style/images/ODD_Green.png' %}",
+				iconSize: [20, 29],
+				iconAnchor: [16, 37],
+				popupAnchor: [0, -35]
+	});
+		
+		function getIcon(r) {
+					switch(r) {
+						case "ODB": return ODBIcon;
+						case "ODD": return ODDIcon;
+						case "ODJ": return ODJIcon;
+						case "ODN": return ODNIcon;
+						case "ODP": return ODPIcon;
+						case "ODS": return ODSIcon;
+						case "ODC": return ODCIcon;
+						}
+					}
+
+		reportLayer = new L.GeoJSON();
+
+		function onEachFeature(feature, layer) {
+			
+			var popup = "<h2 style='color:red;font-family:Impact;font-size:25px;'>" + feature.properties.name+ "</h2> <p style='font-family:Calibri;font-size:12px;'> <b>NDMO:  </b>" + feature.properties.ndmo + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Reporting Line:  </b>" + feature.properties.reporting_line + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Address:  </b>" + feature.properties.address + "</p><p style='font-family:Calibri;'> <b>Focal Point:  </b>" + feature.properties.focal_point + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Contacts:  </b>" + feature.properties.contacts+ "</p><p style='font-family:Calibri;font-size:12px;'> <b>WFP Focal Point:  </b>" + feature.properties.wfp_focal_point + "<dl><dt><p style='font-family:Calibri;font-size:12px;margin:0;'><b>Profile:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd></dl>";
+			if (feature.properties.doc1){
+				var popup = "<h2 style='color:red;font-family:Impact;font-size:25px;'>" + feature.properties.name+ "</h2> <p style='font-family:Calibri;font-size:12px;'> <b>NDMO:  </b>" + feature.properties.ndmo + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Reporting Line:  </b>" + feature.properties.reporting_line + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Address:  </b>" + feature.properties.address + "</p><p style='font-family:Calibri;'> <b>Focal Point:  </b>" + feature.properties.focal_point + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Contacts:  </b>" + feature.properties.contacts+ "</p><p style='font-family:Calibri;font-size:12px;'> <b>WFP Focal Point:  </b>" + feature.properties.wfp_focal_point + "<dl><dt><p style='font-family:Calibri;font-size:12px;margin:0;'><b>Profile:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd></dl>";
+			}
+			if (feature.properties.doc2){
+				var popup = "<h2 style='color:red;font-family:Impact;font-size:25px;'>" + feature.properties.name+ "</h2> <p style='font-family:Calibri;font-size:12px;'> <b>NDMO:  </b>" + feature.properties.ndmo + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Reporting Line:  </b>" + feature.properties.reporting_line + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Address:  </b>" + feature.properties.address + "</p><p style='font-family:Calibri;'> <b>Focal Point:  </b>" + feature.properties.focal_point + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Contacts:  </b>" + feature.properties.contacts+ "</p><p style='font-family:Calibri;font-size:12px;'> <b>WFP Focal Point:  </b>" + feature.properties.wfp_focal_point + "<dl><dt><p style='font-family:Calibri;font-size:12px;margin:0;'><b>Profile:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url2+ "' target='_blank' ><b>" + feature.properties.doc2 + "</b></a></p></dd></dl>";
+			}
+			if (feature.properties.doc3){
+				var popup = "<h2 style='color:red;font-family:Impact;font-size:25px;'>" + feature.properties.name+ "</h2> <p style='font-family:Calibri;font-size:12px;'> <b>NDMO:  </b>" + feature.properties.ndmo + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Reporting Line:  </b>" + feature.properties.reporting_line + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Address:  </b>" + feature.properties.address + "</p><p style='font-family:Calibri;'> <b>Focal Point:  </b>" + feature.properties.focal_point + "</p><p style='font-family:Calibri;font-size:12px;'> <b>Contacts:  </b>" + feature.properties.contacts+ "</p><p style='font-family:Calibri;font-size:12px;'> <b>WFP Focal Point:  </b>" + feature.properties.wfp_focal_point + "<dl><dt><p style='font-family:Calibri;font-size:12px;margin:0;'><b>Profile:  </b></p></dt><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url0+ "' target='_blank' ><b>" + feature.properties.doc0 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url1+ "' target='_blank' ><b>" + feature.properties.doc1 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url2+ "' target='_blank' ><b>" + feature.properties.doc2 + "</b></a></p></dd><dd><p align='center' style='font-family:Calibri;font-size:12px;margin:0;'><a href='http://geonode.wfp.org/imaps/capro/" + feature.properties.url3+ "' target='_blank' ><b>" + feature.properties.doc3 + "</b></a></p></dd></dl>";
+			}
+
+		layer.bindPopup(popup);
+		}
+		function getEvent(){
+			$.getJSON("{% url 'capro-country-json' %}", function(resp) {		
+				reportLayer = L.geoJson(resp,{
+					pointToLayer: function (feature, latlng) {
+								return L.marker(latlng, {icon: getIcon(feature.properties.regional), title: feature.properties.name});
+					},
+					onEachFeature: onEachFeature,	
+				}).addTo(map);
+			});
+		}
+		$(document).ready(function() {
+							setTimeout('getEvent()',1);
+				});
+
+	</script>
+</body>
+</html>

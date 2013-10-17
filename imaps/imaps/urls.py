@@ -10,6 +10,7 @@ urlpatterns = patterns('',
         name='index'),
     url(r'^smartfeeds/', include('smart_feeds.urls')),
     url(r'^wwatch/', include('wwatch.urls')),
+    url(r'^capro/', include('capro.urls')),
     url(r'^print-tracker/', include('print_tracker.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

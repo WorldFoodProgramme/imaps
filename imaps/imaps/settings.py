@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'print_tracker',
     'smart_feeds',
     'gdelt',
+    'capro',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
