@@ -53,9 +53,9 @@ USE_L10N = True
 USE_TZ = True
 
 MEDIA_ROOT = root("media")
-STATIC_ROOT = root("collected_static")
+STATIC_ROOT = root("static_root")
 MEDIA_URL = '/media/'
-STATIC_URL = "/static/"
+STATIC_URL = "/static_imaps/"
 
 # Additional locations of static files
 STATICFILES_DIRS = (
