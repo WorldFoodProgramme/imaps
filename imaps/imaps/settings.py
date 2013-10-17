@@ -129,7 +129,6 @@ INSTALLED_APPS = (
     'print_tracker',
     'smart_feeds',
     'gdelt',
-    'critical_election',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
