@@ -255,7 +255,7 @@ REGIONAL = [
 
 class Profile(models.Model):
 	name = models.CharField('Document name',blank = True, max_length=255)
-	document = models.FileField('Document', upload_to='capro/pdf/')
+	document = models.FileField('Document', max_length=255, upload_to='capro/pdf/')
 	country = models.ForeignKey('Country')
 	
 	class Meta:
