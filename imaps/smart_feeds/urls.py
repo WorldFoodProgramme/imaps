@@ -3,6 +3,10 @@ from django.conf.urls.defaults import *
 import views
 
 urlpatterns = patterns('',
+
+    # home
+    url(r'^$', views.searches_list, name='smartfeeds-home'),
+    
     # tweets
     url(r'^map$', views.tweets_map, name='tweets-map'),
     url(r'^tweets$', views.tweets_list, name='tweets-list'),

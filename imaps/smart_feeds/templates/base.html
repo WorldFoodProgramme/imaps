@@ -37,7 +37,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
               <!-- home -->
-              {% url "searches-list" as url %}
+              {% url "smartfeeds-home" as url %}
               <li {% if request.get_full_path = url %} class="active" {% endif %} >
               <a href="{{ url }}">Home</a></li>
               <!-- tweets -->
