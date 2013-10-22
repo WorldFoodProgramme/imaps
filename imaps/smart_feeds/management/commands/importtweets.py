@@ -72,7 +72,7 @@ class Command(BaseCommand):
                         self.loadtweet(search, result)
         self.stdout.write('\n***Removing old tweets')
         firstday = datetime.date.today()-datetime.timedelta(days=int(settings.DAYS_TO_KEEP))
-        #Tweet.objects.filter(created_at__lte=firstday).delete()
+        Tweet.objects.filter(created_at__lte=firstday).delete()
 
     def loadtweet(self, search, result):
         tweets = Tweet.objects.filter(twitter_id=result.id)
