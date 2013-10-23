@@ -20,6 +20,7 @@ class TweetAdmin(admin.ModelAdmin):
     list_per_page = 20
     list_display = ['twitter_id', 'status', 'user_name', 'the_places', 'the_searches']
     search_fields = ['twitter_id', 'status', 'user_name']
+    date_hierarchy = 'created_at'
     
     def the_tags(self, obj):
         return "%s" % (obj.tags.all(), )
