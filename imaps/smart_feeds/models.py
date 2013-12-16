@@ -104,7 +104,10 @@ class Tweet(models.Model):
     filtered = models.BooleanField(default=False)
     archived = models.BooleanField(default=False)
     places = models.ManyToManyField(Place, null=True, blank=True)
-    
+    searches = models.ManyToManyField('Search', null=True, 
+        blank=True, db_table='smart_feeds_search_tweets')
+        # there must be a better way to do this!
+        
     tags = TaggableManager()
 
     def item_type(self):

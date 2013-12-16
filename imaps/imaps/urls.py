@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^capro/', include('capro.urls')),
     url(r'^print-tracker/', include('print_tracker.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin_export/', include('admin_export.urls')),
 )
 
 if settings.DEBUG:
