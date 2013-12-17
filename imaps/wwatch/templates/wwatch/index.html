@@ -58,14 +58,22 @@ All rights reserved. None of this information may be reproduced, translated, or 
 	<a class="trigger_legend" href="#"> <p class="horiz">LEGEND</p></a> -->
 	<script>
 
-		
-		var map = L.map('map').setView([11, 25.5], 3);
+		var base = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+					attribution: ''
+				});
 
-    L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-	minZoom: 2,	
-	maxZoom: 5,
-	attribution: ''
-    }).addTo(map);
+		var map = L.map('map', {
+			center: [11, 25.5],
+			zoom: 3,
+			minZoom: 3,
+        		maxZoom: 3,
+			layers: [base],
+			scrollWheelZoom: false,
+			doubleClickZoom: false,
+			zoomControl: false,
+			touchZoom: false
+		});
+
 
 		var eventLayer = new L.GeoJSON();
 
