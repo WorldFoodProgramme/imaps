@@ -162,7 +162,7 @@ class Search(gismodels.Model):
     name = gismodels.CharField(max_length=50)
     geometry = gismodels.MultiPolygonField(srid=4326)
     keywords = models.ManyToManyField(Keyword, null=True, blank=True)
-    tweets = models.ManyToManyField(Tweet, null=True, blank=True)
+    tweets = models.ManyToManyField(Tweet, null=True, blank=True, through=Tweet.searches.through)
     #items = models.ManyToManyField(Item, null=True, blank=True)
     is_enabled = models.BooleanField()
     objects = gismodels.GeoManager()
