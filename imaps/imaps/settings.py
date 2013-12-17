@@ -54,7 +54,7 @@ USE_TZ = True
 
 MEDIA_ROOT = root("media")
 STATIC_ROOT = root("static_root")
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media_imaps/'
 STATIC_URL = "/static_imaps/"
 
 # Additional locations of static files
