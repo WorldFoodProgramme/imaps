@@ -58,9 +58,12 @@ All rights reserved. None of this information may be reproduced, translated, or 
 	<a class="trigger_legend" href="#"> <p class="horiz">LEGEND</p></a> -->
 	<script>
 
-		var base = L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-					attribution: ''
-				});
+		var base = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
+			attribution: '',
+			subdomains: '0123',
+			minZoom: 2,
+			maxZoom: 18
+		});
 
 		var map = L.map('map', {
 			center: [11, 25.5],
