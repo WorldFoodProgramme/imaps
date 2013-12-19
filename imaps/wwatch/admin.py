@@ -10,7 +10,6 @@ class InlineResource(admin.TabularInline):
 
 class InlineLink(admin.TabularInline):
 	model = Link
-	max_num = 2
 
 class EventInline(admin.TabularInline):
     model = Event
@@ -29,7 +28,7 @@ class CountryAdmin(admin.ModelAdmin):
 class EventAdmin(admin.ModelAdmin):
     inlines = [InlineResource, InlineLink,]
     fieldsets = [
-        ('Event',{'fields': ['country', 'date', 'alert_level', 'hazard_type', 'event_comment', 'visible' ]}),
+        ('Event',{'fields': ['country', 'date', 'alert_level', 'hazard_type', 'confidence', 'event_comment', 'visible' ]}),
     ]
     
     list_display = ('country', 'alert_level', 'hazard_type', 'event_comment', 'date', 'visible')
