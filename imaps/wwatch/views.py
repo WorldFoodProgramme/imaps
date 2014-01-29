@@ -10,7 +10,12 @@ import json
 def init(request):
     """Main function to serve the application responses"""
     if request.method == 'GET':
-        return render_to_response('wwatch/index.html', {}, RequestContext(request))
+        events = Event.objects.all().filter(visible = True).order_by('country__terr_name')
+        return render_to_response(
+            'wwatch/index.html', 
+            {'events': events}, 
+            RequestContext(request)
+        )
 
 def getEvents(request):
     jsontpl = {

@@ -6,10 +6,10 @@
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="{{STATIC_URL}}wwatch/style/leaflet.css" />
+	<link rel="stylesheet" href="{{STATIC_URL}}wwatch/js/leaflet/leaflet.css" />
 	<link rel="stylesheet" href="{{STATIC_URL}}wwatch/style/panel.css" />
-	<!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />-->
-	<script type="text/javascript" src="{{STATIC_URL}}wwatch/js/lib/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}wwatch/js/jquery-1.7.1.min.js"></script>
+	<script src="{{STATIC_URL}}wwatch/js/leaflet/leaflet.js"></script>
 
 	<style type="text/css">
 		body {
@@ -27,6 +27,25 @@ background: linear-gradient(to right, rgba(35,167,247,1) 0%,rgba(35,167,247,1) 6
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#23a7f7', endColorstr='#0097e0ff',GradientType=1 ); /* IE6-9 */
 }		
 		#description {z-index: 20; position: absolute; top:60px;left:0;font-family: Trebuchet MS’, Helvetica, sans-serif; font-size: 0.6em;color:white;padding: 15px;opacity: .85;text-shadow: 0 0 4px #000;font-weight:800;width: 400px}
+		
+		#events-list {padding:20px;margin:0px;z-index: 20; position: absolute; top:140px;right:5px;font-family: Trebuchet MS’, Helvetica, sans-serif;background:rgba(255, 255, 255, 0.8);color:rgba(35,167,247,1);text-align: right;font-weight: bold;
+}
+
+ul {
+    list-style-type:none;
+    padding:0px;
+    text-align:right;
+    font-size: 1em;
+    font-weight: normal;
+}
+li {
+    font-size: 0.8em;
+    color:rgba(0,0,0,1);
+}
+a {
+    color:rgba(0,0,0,1);
+}
+
 		</style>
 	
 </head>
@@ -44,37 +63,38 @@ All rights reserved. None of this information may be reproduced, translated, or 
 				<p>The views presented here are those of the authors and do not necessarily reflect the World Food Programme's official position. The material in this publication, including in maps, does not imply the expression of any opinion whatsoever on the part of the World Food Programme concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. All reasonable precautions have been taken by the World Food Programme to verify the information and data contained in this publication. However, the published material is being distributed without warranty of any kind, either expressed or implied, including the accuracy of data. The responsibility of the interpretation and use of the material lies solely with the reader. In no event shall the World Food Programme be liable for damages arising from its interpretation, use or reliance thereof.</p>		
 			</div>
 			<a class="trigger" href="#"> <p class="horiz">DISCLAIMER</p></a>
-	<!--<script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>-->
-	<script src="{{STATIC_URL}}wwatch/js/lib/leaflet.js"></script>
 	
 	<div id="header">Weekly Weather Watch</div>
 	<div id="description">This map indicates current weather concerns for the upcoming week that OMEP is monitoring. If there is high enough confidence for a possible humanitarian impact, OMEP will issue specific products and provide more detailed information.</div>
 	
-<!-- Add Legend Panel
-	<div class="panel_legend">
-		<img src="../static/img/WeatherLegend.png" style="no-repeat; height:190px; width: 280px; color: white;">
-		</img>
+	<div id="events-list">
+	    Alerts List
+	    <ul>
+	        {% for event in events %}
+	        <li><a id="{{ event.id}}" href="#">{{ event.country.terr_name|truncatechars:28 }}</a> ({{ event.hazard_type }})</li>
+	        {% endfor %}
+	    </ul>
 	</div>
-	<a class="trigger_legend" href="#"> <p class="horiz">LEGEND</p></a> -->
+	
 	<script>
 
-		var base = L.tileLayer('http://a{s}.acetate.geoiq.com/tiles/acetate-base/{z}/{x}/{y}.png', {
-			attribution: '',
-			subdomains: '0123',
-			minZoom: 2,
-			maxZoom: 18
-		});
+		
+		var base= L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+            maxZoom: 16
+        });
+
 
 		var map = L.map('map', {
 			center: [11, 25.5],
 			zoom: 3,
-			minZoom: 3,
-        		maxZoom: 3,
+			//minZoom: 3,
+        	//maxZoom: 3,
 			layers: [base],
-			scrollWheelZoom: false,
-			doubleClickZoom: false,
+			scrollWheelZoom: true,
+			doubleClickZoom: true,
 			zoomControl: false,
-			touchZoom: false
+			touchZoom: true
 		});
 
 
@@ -145,8 +165,17 @@ All rights reserved. None of this information may be reproduced, translated, or 
                     }
 			    }
 			layer.bindPopup(popup);
+			var featBounds = layer.getBounds();
+			// bind link
+			$("a[id=" + feature.id + "]").click(function(){
+		        map.fitBounds(featBounds);
+		        //map.zoomOut(1.2);
+            });
+			
 	}
 
+		
+		var reportLayer;
 		
 		function getEvent(){
 			$.getJSON("json/Events", function(resp) {		
@@ -168,7 +197,6 @@ All rights reserved. None of this information may be reproduced, translated, or 
 						return false;
 					});
 				});
-		
 
 	</script>
 </body>

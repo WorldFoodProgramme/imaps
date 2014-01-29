@@ -49,6 +49,7 @@ class Country(models.Model):
     class Meta:
         verbose_name_plural='Countries'
         verbose_name= 'Country'
+        ordering = ['terr_name']
 
     # Returns the string representation of the model.
     def __unicode__(self):
@@ -85,3 +86,4 @@ class Event(models.Model):
     # Returns the string representation of the model.
     def __unicode__(self):
         return u'%s %s %s %s' % (self.country.terr_name, self.date, self.alert_level, self.hazard_type)
+        
