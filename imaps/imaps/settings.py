@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'smart_feeds',
     'gdelt',
     'capro',
+    'gis_presence',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

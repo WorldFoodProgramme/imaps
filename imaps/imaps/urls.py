@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     url(r'^wwatch/', include('wwatch.urls')),
     url(r'^capro/', include('capro.urls')),
     url(r'^print-tracker/', include('print_tracker.urls')),
+    url(r'^gis-presence/', TemplateView.as_view(template_name='gis_presence/employees-map.html'), 
+        name='gis-presence'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_export/', include('admin_export.urls')),
 )
