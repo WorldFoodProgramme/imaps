@@ -62,9 +62,9 @@ class Command(BaseCommand):
             if search.is_enabled:
                 for keyword in search.keywords.all():
                     results = api.search(q=keyword.name, count=100, include_entities=True)
-                    #results = tweepy.Cursor(api.search(q=keyword.name)).items()
                     for result in results:
-                        #import ipdb;ipdb.set_trace()
+                        print result.id, result.created_at, result.text
+                    for result in results:
                         print " ID: %s" % result.id
                         print " From: %s" % result.user.name.encode('utf-8')
                         print " Created : %s" % result.created_at
@@ -85,19 +85,17 @@ class Command(BaseCommand):
                 t.user_name = result.user.name.encode('utf-8')
                 t.screen_name = result.user.screen_name.encode('utf-8')
                 t.created_at = result.created_at
-                #import ipdb;ipdb.set_trace()
                 t.save()
                 t.search_set.add(search)
                 
                 # define text to be parsed
-                text2parse = t.status
+                text2parse = t.status.replace(',', ' ')
 
                 # 2. people
                 people = Person.objects.all()
                 for person in people:
                     if re.search(person.name, text2parse, re.IGNORECASE):
                         self.stdout.write('\n***Person %s is in this item.' % person.name)
-                        #import ipdb;ipdb.set_trace()
                         person.tweets.add(t)
                         
                 # 4. tags
@@ -108,17 +106,15 @@ class Command(BaseCommand):
                         t.tags.add(tag)
                         
                 # 5. places
-                for p_key in t.status.split():
-                    p_key = p_key.translate(None, "?,#:'\"") # remove certain characters
+                for p_key in text2parse.split():
+                    p_key = p_key.translate(None, "@?,#:'\"") # remove certain characters
                     if len(p_key) > 4:
                         place = None
                         if Place.objects.filter(name__iexact=p_key).exists():
-                            #import ipdb;ipdb.set_trace()
                             place = Place.objects.filter(name__iexact=p_key)[0]
                         else:
                             placename = self.get_placename(p_key)
                             if placename:
-                                #import ipdb;ipdb.set_trace()
                                 place = Place()
                                 place.name = p_key #placename[0]
                                 place.slug = slugify(placename[0])
@@ -126,6 +122,8 @@ class Command(BaseCommand):
                         if place:
                             # if we have a place, check if the place is on the search geometry
                             #qs = SpatialFilter.objects.filter(geometry__contains=place.geometry)
+                            #if place.name.lower()=='toimarket':
+                            #    import ipdb;ipdb.set_trace()
                             if search.geometry.contains(place.geometry):
                                 place.save()
                                 t.places.add(place)

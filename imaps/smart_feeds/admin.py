@@ -18,7 +18,7 @@ class TweetAdmin(admin.ModelAdmin):
 
     model = Tweet
     list_per_page = 20
-    list_display = ['twitter_id', 'status', 'user_name', 'the_places', 'the_searches']
+    list_display = ['twitter_id', 'created_at', 'status', 'user_name', 'the_places', 'the_searches']
     search_fields = ['twitter_id', 'status', 'user_name']
     list_filter = ['searches']
     date_hierarchy = 'created_at'
