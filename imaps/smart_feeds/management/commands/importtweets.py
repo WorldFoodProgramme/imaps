@@ -63,8 +63,6 @@ class Command(BaseCommand):
                 for keyword in search.keywords.all():
                     results = api.search(q=keyword.name, count=100, include_entities=True)
                     for result in results:
-                        print result.id, result.created_at, result.text
-                    for result in results:
                         print " ID: %s" % result.id
                         print " From: %s" % result.user.name.encode('utf-8')
                         print " Created : %s" % result.created_at
@@ -134,8 +132,6 @@ class Command(BaseCommand):
                     place.slug = slugify(t.status)
                     place.geometry = Point(result.geo['coordinates'][1], result.geo['coordinates'][0])
                     place.from_gps = True
-                    print place.geometry.x, place.geometry.y, search.name
-                    print search.geometry.extent
                     if search.geometry.contains(place.geometry):
                         place.save()
                         t.places.add(place)
