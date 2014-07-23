@@ -14,3 +14,4 @@ psycopg2==2.5.1
 tweepy==2.1
 wsgiref==0.1.2
 xlwt==0.7.5
+unicodecsv==0.9.4

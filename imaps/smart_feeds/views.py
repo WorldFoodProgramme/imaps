@@ -1,5 +1,5 @@
 # django
-import csv
+import unicodecsv
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
@@ -145,9 +145,9 @@ def tweets_list_csv(request):
     response['Content-Disposition'] = 'attachment; filename="tweets_export.csv"'
 
     tweets = Tweet.objects.all().order_by('-created_at')
-    writer = csv.writer(response)
+    writer = unicodecsv.writer(response, encoding='utf-8')
     for t in tweets:
-        writer.writerow([t.created_at, t.screen_name.encode('utf-8'), t.status.encode('utf-8'), t.the_places()])
+        writer.writerow([t.created_at, t.screen_name, t.status, t.the_places()])
     return response
 
 def tweet_detail(request, id):
