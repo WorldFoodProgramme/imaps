@@ -75,7 +75,7 @@ def show_map(place):
     }
     
 @register.inclusion_tag('template_tags/show_places_map.html')
-def show_places_map(places, events):
+def show_places_map(places):
     # for a single item we need still to get the recordset
     icon_size = 20
     if isinstance(places, Place):
@@ -85,7 +85,6 @@ def show_places_map(places, events):
         'places': places,
         'icon_size': icon_size,
         'cloudmade_api_key': settings.CLOUDMADE_API_KEY,
-        'events': events,
     }
     
     

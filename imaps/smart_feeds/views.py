@@ -109,17 +109,10 @@ def tweets_map(request):
         search = Search.objects.get(id=search_id)
         tweets = Tweet.objects.filter(search=search).order_by('-created_at')[:rcount]
         places = Place.objects.filter(tweet__search__id=search_id)[:rcount]
-        # TODO filter on multiple keywords (for now just the first one)
-        #import ipdb;ipdb.set_trace()
-        events = Event.objects.filter(url__icontains=search.keywords.all()[0].name)
-        events = events.filter(geometry__intersects=search.geometry).order_by('-date')[:rcount]
-        # items
-        #events = Item.objects.filter(search__id=search_id)[:rcount]
         search_name = search.name
     else:
         tweets = Tweet.objects.all().order_by('-created_at')[:rcount]
         places = Place.objects.all()[:rcount]
-        events = Event.objects.all().order_by('-date')[:rcount]
         search_name = 'All searches'
         map_title = 'All searches'
     map_title = search_name
@@ -129,8 +122,6 @@ def tweets_map(request):
             'tweets': tweets,
             'places': places,
             'search_name': search_name,
-            'events': events,
-            #'items': items,
         },
         context_instance=RequestContext(request))
 
@@ -217,9 +208,9 @@ def tweet_detail(request, id):
     """
     Item detail for a given pk.
     """
-    item = get_object_or_404(Item, pk=id)
+    tweet = get_object_or_404(Tweet, pk=id)
     return render_to_response('items/item_detail.html',
-            {'item': item, },
+            {'tweet': tweet, },
             RequestContext(request))
             
 # place

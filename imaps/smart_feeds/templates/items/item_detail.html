@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load tags %}
 
-{% block title %}Details for item "{{ item.title|truncatechars:100 }}"{% endblock %}
+{% block title %}Details for tweet {{ tweet.twitter_id }}{% endblock %}
 
 {% block media %}
     
@@ -13,34 +13,16 @@
         <div class="span3">
             <!-- item detail -->
             <ul>
-                <li>Update: {{ item.updated }}</li>
-                <li>Title: {{ item.title }}</li>
-                <li>Feed: {{ item.feed.name }}</li>
-                <li><a href="{{ item.link }}">Link</a></li>
+                <li>Created at: {{ tweet.created_at }}</li>
+                <li>Status: {{ tweet.status }}</li>
+                <li>User: <a href="https://twitter.com/{{ t.screen_name }}">@{{ tweet.screen_name }}</a></li>
+                <li>Places: {{ tweet.the_places }}</li>
             </ul>
-            <!-- people list -->
-            {% show_people_long item %}
-            
-            <!-- keyword list -->
-            {% show_keywords_long item %}
-            
-            <!-- images list -->
-            {% show_images_long item %}
-            
-            <!-- domain -->
-            {% show_domain item %}
-            
-            <!-- tags -->
-            {% show_tags item %}
-            
-            <!-- places -->
-            {% show_places item %}
             
         </div>
-        <div class="span9"><!-- places list -->
-            
+        <div class="span9">
             <!-- map -->
-            {% show_places_map item %}
+            {% show_places_map tweet.places %}
         </div>
     </div>
 
