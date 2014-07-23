@@ -147,7 +147,7 @@ def tweets_list_csv(request):
     tweets = Tweet.objects.all().order_by('-created_at')
     writer = csv.writer(response)
     for t in tweets:
-        writer.writerow([t.created_at, t.screen_name, t.status, t.the_places()])
+        writer.writerow([t.created_at, t.screen_name.encode('utf-8'), t.status.encode('utf-8'), t.the_places()])
     return response
 
 def tweet_detail(request, id):
