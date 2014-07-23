@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     url(r'^map$', views.tweets_map, name='tweets-map'),
     url(r'^tweets$', views.tweets_list, name='tweets-list'),
     url(r'^tweet/(?P<id>\d+)/detail$', views.tweet_detail, name='tweet-detail'),
-    url(r'^tweets/csv$', views.tweets_list_csv, name='tweets-list-csv'),
+    url(r'^tweets/csv/(?P<search_id>\d+)$', views.tweets_list_csv, name='tweets-list-csv'),
     
     # places
     url(r'^places$', views.places_list, name='places-list'),

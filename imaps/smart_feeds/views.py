@@ -105,6 +105,7 @@ def tweets_map(request):
     rcount = 200
     tweets = None
     places = None
+    search_id = 99999
     if 'search_id' in request.GET:
         search_id = request.GET.get('search_id', '')
         search = Search.objects.get(id=search_id)
@@ -123,6 +124,7 @@ def tweets_map(request):
             'tweets': tweets,
             'places': places,
             'search_name': search_name,
+            'search_id': search_id,
         },
         context_instance=RequestContext(request))
 
@@ -137,14 +139,17 @@ def tweets_list(request):
         },
         context_instance=RequestContext(request))
     
-def tweets_list_csv(request):
+def tweets_list_csv(request, search_id):
     """
     Export a full list of tweets to csv.
     """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="tweets_export.csv"'
-
+    
     tweets = Tweet.objects.all().order_by('-created_at')
+    search = Search.objects.get(id=search_id)
+    tweets = tweets.filter(search=search).order_by('-created_at')
+
     writer = unicodecsv.writer(response, encoding='utf-8')
     for t in tweets:
         writer.writerow([t.created_at, t.screen_name, t.status, t.the_places()])
