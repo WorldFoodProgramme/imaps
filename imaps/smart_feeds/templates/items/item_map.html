@@ -17,7 +17,7 @@
           <div class="row">
               <!-- Tweets -->
               <div class="col-md-12">
-              <h2>Tweets</h2>
+              <h2>Tweets</h2> export to <a href="{% url 'tweets-list-csv' %}">csv</a>
                     {% autopaginate tweets 10 %}
                     <ul>
                     {% for t in tweets %}

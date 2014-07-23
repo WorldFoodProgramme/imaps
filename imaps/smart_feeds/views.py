@@ -1,4 +1,5 @@
 # django
+import csv
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
@@ -136,73 +137,18 @@ def tweets_list(request):
         },
         context_instance=RequestContext(request))
     
-def tweets_list_old(request):
+def tweets_list_csv(request):
     """
-    View a full list of items for a given feed, with certain filters.
+    Export a full list of tweets to csv.
     """
-    #import ipdb;ipdb.set_trace()
-    # query
-    items = Item.objects.all().order_by('-updated')
-    # feeds list
-    feeds = Feed.objects.all().order_by('name')
-    # check for filters
-    # 1. filter for feedclass
-    feedclass = 'ALL'
-    if 'feedclass' in request.GET:
-        feedclass = request.GET.get('feedclass', 'ALL')
-        if feedclass != 'ALL':
-            items = items.filter(feed__feed_class__exact=feedclass)
-            feeds = feeds.filter(feed_class=feedclass)
-    # 2. filter for archived
-    archived = False
-    if 'archived' in request.GET:
-        archived = True
-        if archived:
-            items = items.filter(archived=False)
-    # 3. filter for filtered
-    filtered = False
-    if 'filtered' in request.GET:
-        filtered = True
-        if filtered:
-            items = items.filter(filtered=False)
-    # 4. filter for geoparsed
-    geoparsed = False
-    if 'geoparsed' in request.GET:
-        geoparsed = True
-        if geoparsed:
-            items = items.annotate(num_places=Count('place'))
-            items = items.filter(num_places__gt=0)
-    # 5. filter for feed
-    feed = None
-    if 'feedid' in request.GET:
-        feed_id = int(request.GET.get('feedid', '9999'))
-        if feed_id != 9999:
-            feed = Feed.objects.get(pk=feed_id)
-            items = items.filter(feed=feed)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="tweets_export.csv"'
 
-    # is it an archive request?
-    if 'submit-archive' in request.POST:
-        # only if user is authenticated
-        if request.user.is_authenticated():
-            print 'Archiving %s items...' % items.filter(archived=False).count()
-            for item in items:
-                item.archived=True
-                item.save()
-
-    # archived and unarchive items count
-    archived_count = items.filter(archived=True).count()
-
-    return render_to_response('items/item_list.html', 
-        {   'feeds' : feeds,
-            'items' : items,
-            'feedclass': feedclass,
-            'archived': archived,
-            'filtered': filtered,
-            'geoparsed': geoparsed,
-            'selectedfeed': feed,
-            'archived_count': archived_count,
-        },
-        context_instance=RequestContext(request))
+    tweets = Tweet.objects.all().order_by('-created_at')
+    writer = csv.writer(response)
+    for t in tweets:
+        writer.writerow([t.created_at, t.screen_name, t.status, t.the_places()])
+    return response
 
 def tweet_detail(request, id):
     """
